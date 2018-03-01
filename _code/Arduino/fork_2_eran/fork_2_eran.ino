@@ -7,8 +7,8 @@
 
 // connect the encoder channelA to digital pin 4
 // connect the encoder channelB to digital pin 5
-#define CHA 4
-#define CHB 5
+#define CHA 2
+#define CHB 3
 #define NO_TRANSITION_EVENT (1)
 
 // channel shift register

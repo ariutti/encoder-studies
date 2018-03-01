@@ -39,7 +39,7 @@ void setup()
   f = createFont("Courier", 14);
  
   println(Serial.list());
-  s_port = new Serial(this, Serial.list()[0], 9600);
+  s_port = new Serial(this, Serial.list()[3], 9600);
   bSerialListen = false;
      
   plotterWidth  = width - leftMargin - rightMargin;

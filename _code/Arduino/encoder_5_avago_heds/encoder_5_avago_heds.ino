@@ -10,6 +10,7 @@
 const int LED = 13;
 const int ENC_A = 2;
 const int ENC_B = 3;
+uint8_t shift = 2;
 
 byte bCurrent;
 byte bPrevious;
@@ -44,8 +45,8 @@ void setup()
 
 
   // bit shift 4 bits in order to read
-  // pin 2 and 3 as the least significant
-  bCurrent = PIND >> 2;
+  // pin 4 and 5 as the least significant
+  bCurrent = PIND >> shift;
   bCurrent = bCurrent & B00000011;
   bPrevious = bCurrent;
 
@@ -64,11 +65,11 @@ void loop()
   // read the status of the two pins
   // (bit 2 and 3 of PORTD register respectively).
   // Do a bit shift operation to discard TX and RX bit information  
-  bCurrent = PIND >> 2;
+  bCurrent = PIND >> shift;
   // Do an AND to discard information from the other digital pins
   bCurrent = bCurrent & B00000011;
 
-  /*
+  
   if( bCurrent != bPrevious )
   {
     if( ( bCurrent == 1 && bPrevious == 0 ) ||
@@ -110,10 +111,10 @@ void loop()
     bPrevious = bCurrent;
     //debug();
   }
-  */
   
-  uint8_t a = digitalRead(2);
-  uint8_t b = digitalRead(3);
+  /*
+  uint8_t a = digitalRead(ENC_A);
+  uint8_t b = digitalRead(ENC_B);
 
   if( bSendSerialData )
   {
@@ -125,6 +126,7 @@ void loop()
     //Serial.print(" - ");
     //Serial.println(b);
   }
+  */
 }
 
 
