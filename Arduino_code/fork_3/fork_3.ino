@@ -8,15 +8,13 @@
  * quadrature pattern.
  */
 
-
+// ENCODER STUFF ******************************/
 const int ENC_CHA = 2;
 const int ENC_CHB = 3;
 uint8_t shift = 2;
 
 byte bCurrent;
 byte bPrevious;
-
-boolean bSendSerialData = false;
 
 int integrator = 0;
 
@@ -27,19 +25,26 @@ enum STATE
   ENC_CCW
 } state;
 
-
-// Reset
-const int LED = 13;
+// Black dot reset stuff **********************/
 // a threshold for the signal going from LOW to HIGH
-uint8_t hysteresis_H = 240;
+const uint8_t TH_HI = 240;
 // a threshold for the signal going from HIGH to LOW
-uint8_t hysteresis_L = 210;
+const uint8_t TH_LO = 210;
 // filter coefficients
-const float A = 0.3;
-float B;
+float B, A = 0.3;
 float value = 0.0;
+boolean below = false;
 
-/*SETUP **********************************/
+// Serial Comm ********************************/
+boolean bSendSerialData = false;
+
+// Other stuff ********************************/
+const int LED = 13;
+const int DELAY_TIME = 5;
+
+// TODO: map encoder on interrupts!!
+
+// SETUP ///////////////////////////////////////
 void setup() 
 {
   Serial.begin( 9600 );
@@ -55,11 +60,11 @@ void setup()
   bCurrent = (PIND >> shift) & B00000011;
   bPrevious = bCurrent;
 
+  // filter stuff
   B = 1.0 - A;
 }
 
-
-/* LOOP **********************************/
+// LOOP ////////////////////////////////////////
 void loop() 
 {
   // read the status of the two pins 
@@ -67,10 +72,7 @@ void loop()
   // Do an AND to discard information from the other digital pins
   bCurrent = (PIND >> shift) & B00000011;
 
-
-  // I've tempoarily commented out this section
-  // in order to debug the black reset dot!
-  /*
+  // encoder stuff
   if( bCurrent != bPrevious )
   {
     if( ( bCurrent == 1 && bPrevious == 0 ) ||
@@ -105,25 +107,31 @@ void loop()
         //  Serial.write(2);
        }
     }
-    
     bPrevious = bCurrent;
-  }
-  */
-  
+  }  
 
-  // filter stuff for black reset spot 
+  
+  // Black dot stuff **************************/
+  // filter stuff for black reset spot
   value = A*analogRead(A0) + B*value;
-  if(value > hysteresis_H)
+  if(!below && value > TH_HI)
+  {
+    below = true;
     digitalWrite(LED, HIGH);
-  else if(value < hysteresis_L)
-    digitalWrite(LED, LOW);
+    Serial.println(1);
     
-  Serial.println(value);
-  delay(10);  
+  }
+  else if(below && value < TH_LO)
+  {
+    below = false;
+    digitalWrite(LED, LOW);
+    Serial.println(0);
+  }
+    
+  delay(DELAY_TIME);  
 }
 
-
-/* SERIAL EVENT **************************/
+// SERIAL EVENT ////////////////////////////////
 void serialEvent()
 {
   byte b = Serial.read();
