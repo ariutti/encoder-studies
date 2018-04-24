@@ -43,6 +43,7 @@ const int LED = 13;
 const int DELAY_TIME = 5;
 
 // TODO: map encoder on interrupts!!
+// TODO: improve serial communication
 
 // SETUP ///////////////////////////////////////
 void setup() 
@@ -85,8 +86,10 @@ void loop()
       if(bCurrent == 0 && bPrevious == 2)
       {
         integrator ++;
-        Serial.print(" CW: ");
-        Serial.println(integrator);
+        
+        Serial.print("CW;"); // send it if we take a clockwise step
+        //Serial.println(integrator);
+        
         //if( bSendSerialData )
         //  Serial.write(1);
       }
@@ -101,8 +104,10 @@ void loop()
       if(bCurrent == 0 && bPrevious == 1)
       {
         integrator --;
-        Serial.print("CCW: ");
-        Serial.println(integrator);
+        
+        Serial.print("CCW;"); // send it if we take a counter-clockwise step
+        //Serial.println(integrator);
+        
         //if( bSendSerialData )
         //  Serial.write(2);
        }
@@ -118,27 +123,16 @@ void loop()
   {
     below = true;
     digitalWrite(LED, HIGH);
-    Serial.println(1);
+    //Serial.println(1);
+    Serial.print("R;"); // send it as reset
     
   }
   else if(below && value < TH_LO)
   {
     below = false;
     digitalWrite(LED, LOW);
-    Serial.println(0);
+    //Serial.println(0);
   }
     
   delay(DELAY_TIME);  
-}
-
-// SERIAL EVENT ////////////////////////////////
-void serialEvent()
-{
-  byte b = Serial.read();
-  if (b == 'o' || b == 'O')
-    bSendSerialData = true;
-  else if (b == 'c' || b == 'C')
-    bSendSerialData = false;
-  //else if (b == 'r')
-    // do something like a reset
 }
