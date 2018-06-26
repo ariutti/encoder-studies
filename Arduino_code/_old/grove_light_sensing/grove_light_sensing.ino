@@ -1,6 +1,6 @@
 // http://wiki.seeedstudio.com/Grove-Infrared_Reflective_Sensor/
 
-#define DOT 2
+#define DOT 7
 
 
 void setup()
