@@ -22,10 +22,12 @@ This repository is a collection of sketches created while experimenting with and
 * ```encoder_4_optical``` : first test with the **Bourns** optical encoder;
 * ```encoder_5_avago_heds```:
 * ```encoder_6_eran```: this sketch is meant to be used with the **Alpha** mechanical encoder. It outputs the step count;
+* other...
 
 ### Arduino_libraries folder
 
 If I'll need libraries, I'll put them inside here.
+Library folder is empty for the moment (even not backupped indeed).
 
 ## Links
 
